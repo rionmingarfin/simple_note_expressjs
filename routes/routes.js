@@ -1,46 +1,25 @@
 'use strict'
 
-module.exports = function (app){
- const controller= require('../controller/category')
- const controllerNotes =require('../controller/notes');
-//  category
-// //  get
-// const whitelist = ['http://localhost', 'http://local.com']
-// const corsOptions = {
-//   origin: function (origin, callback) {
-//     if (whitelist.indexOf(origin) !== -1) {
-//       callback(null, true)
-//     } else {
-//       callback(new Error('Not allowed by CORS'))
-//     }
-//   }
-// }
-app.get('/',controller.welcome);
+module.exports = function (app) {
+    const controller = require('../controller/category')
+    const controllerNotes = require('../controller/notes');
 
-//get all
-app.get('/category',controller.getAllCategory);
-// get category based on
-app.get('/category/:id',controller.getCategory);
 
-// post category
-app.post('/category',controller.insert);
+    //method welcome
+    app.get('/', controller.welcome);
 
-// update category
-app.put('/category',controller.update);
-// delete category
-app.delete('/category/:id',controller.delete);
+    //routes category
+    app.get('/category', controller.getAllCategory);
+    app.get('/category/:id', controller.getCategory);
+    app.post('/category', controller.insert);
+    app.put('/category', controller.update);
+    app.delete('/category/:id', controller.delete);
 
-// notes
-
-app.get('/note',controllerNotes.welcome);
-// get notes
-app.get('/notes/:id',controllerNotes.getNotes);
-// get all
-app.get('/notes',controllerNotes.getNotesAll);
-// post
-app.post('/notes',controllerNotes.insert);
-// update
-app.put('/notes',controllerNotes.update);
-// delete
-app.delete('/notes/:id',controllerNotes.delete);
+    // route notes
+    app.get('/note', controllerNotes.welcome);
+    app.get('/notes/:id', controllerNotes.getNotes);
+    app.get('/notes', controllerNotes.getNotesAll);
+    app.post('/notes', controllerNotes.insert);
+    app.put('/notes', controllerNotes.update);
+    app.delete('/notes/:id', controllerNotes.delete);
 }
