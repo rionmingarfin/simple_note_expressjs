@@ -1,4 +1,6 @@
 # simple_note_expressjs
+## cara menjalankan aplikasi ini
+* 1. clone git  
 
 ## endPoint LIST
 
