@@ -73,17 +73,20 @@ exports.update = (req, res) => {
     let name = req.body.name;
 
     if (isEmpty(req.body.id) || isEmpty(req.body.name)) {
-        response.error(404, 'data cannot body be empty', res);
+        response.error(403, 'data cannot body be empty', res);
     } else {
         connection.query(
             `UPDATE category SET name=? WHERE id=?`,
             [name, idCategory],
-
             function (error, rows, field) {
                 if (error) {
                     throw error;
                 } else {
-                    response.success(202, 'update data succefully', res, rows)
+                    if (rows.affectedRows === 0) {
+                        response.error(405,'not found',res)
+                    }else{
+                        response.success(202, 'update data succefully', res, rows)
+                    }
                 }
             }
         );
@@ -105,7 +108,7 @@ exports.delete = (req, res, next) => {
                     throw error;
                 } else {
                     if (rows.affectedRows === 0 || rows.affectedRows === '') {
-                        response.error(404, 'data cannot body be empty', res);
+                        response.error(404, 'data not found', res);
                     } else {
                         response.success(202, 'delete data succes', res, rows);
                     }

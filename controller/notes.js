@@ -12,10 +12,12 @@ exports.welcome = (req, res) => {
 exports.getNotesAll = (req, res) => {
 
     var sql = `SELECT notes.id AS id_notes,notes.tittle AS notes_tittle,notes.note AS notes_note,notes.time AS notes_time, category.name AS name_category FROM notes JOIN category ON notes.category_id=category.id`;
+    var sqlCount = `SELECT COUNT(*) AS totalCount FROM notes JOIN category ON notes.category_id=category.id`
     // searching by tittle
     if (!isEmpty(req.query.search)) {
         let search = req.query.search;
         sql += ` WHERE tittle LIKE '%${search}%'`;
+        sqlCount += ` WHERE tittle LIKE '%${search}%'`;
     }
     // sort data by time
     if (!isEmpty(req.query.sort)) {
@@ -31,6 +33,20 @@ exports.getNotesAll = (req, res) => {
     var startpage = (start - 1) * limit;
     sql += ` LIMIT ${limit} OFFSET ${startpage}`;
 
+    // count pages
+    var totalCount;
+    var totalPage;
+    connection.query(sqlCount, function (error, rows, field) {
+        if (error) {
+            response.error(404, 'data not found', res)
+        } else{
+             totalCount = rows[0].totalCount;
+             totalPage =Math.ceil(totalCount/limit);
+            }
+        }
+    )
+    // query
+
     connection.query(sql, function (error, rows, field) {
         if (error) {
             response.error(404, 'data not found', res)
@@ -39,7 +55,12 @@ exports.getNotesAll = (req, res) => {
                 response.error(404, 'data not found', res);
             } else {
                 res.json({
-                    data: rows
+                    totalData :totalCount,
+                    totalPage :totalPage,
+                    page :limit,
+                    status: 200,
+                    data: rows,
+
                 });
             }
         }
