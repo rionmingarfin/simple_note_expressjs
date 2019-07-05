@@ -49,19 +49,30 @@ exports.getCategory = (req, res, next) => {
 
 //  post
 exports.insert = (req, res) => {
-    let firstname = req.body.name;
+    let name = req.body.name;
+    let image =req.body.image;
 
-    if (isEmpty(req.body.name)) {
+    if (isEmpty(req.body.name) || isEmpty(req.body.image)) {
         response.error(404, 'data cannot body be empty', res);
     } else {
         connection.query(
-            `INSERT INTO category SET name=?`,
-            [firstname],
+            `INSERT INTO category SET name=?,image=?`,
+            [name,image],
             function (error, rows, field) {
                 if (error) {
                     throw error;
                 } else {
-                    response.success(201, 'insert data sucesfully', res, rows);
+                    let resultId = rows.insertId
+                    let data = {
+                        status :201,
+                        message : "data sucesfully",
+                        result : {
+                            id :resultId,
+                            name : name,
+                            image : image
+                        }
+                    }
+                    return res.status(202).json(data).end();
                 }
             }
         );

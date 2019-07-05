@@ -18,8 +18,9 @@ module.exports = function (app) {
     // route notes
     app.get('/note', controllerNotes.welcome);
     app.get('/notes/:id', controllerNotes.getNotes);
+    app.get('/notes/category/:id', controllerNotes.getByCategory);
     app.get('/notes', controllerNotes.getNotesAll);
     app.post('/notes', controllerNotes.insert);
-    app.put('/notes', controllerNotes.update);
+    app.put('/notes/:id', controllerNotes.update);
     app.delete('/notes/:id', controllerNotes.delete);
 }
