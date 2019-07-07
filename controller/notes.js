@@ -11,7 +11,7 @@ exports.welcome = (req, res) => {
 // getAll
 exports.getNotesAll = (req, res) => {
 
-    var sql = `SELECT notes.id AS id_notes,notes.title AS notes_title,notes.note AS notes_note,notes.time AS notes_time, category.name AS name_category,category.id AS id_category FROM notes LEFT JOIN category ON notes.category_id=category.id`;
+    var sql = `SELECT notes.id AS id_notes,notes.title AS notes_title,notes.note AS notes_note,notes.time AS notes_time, category.name AS name_category,category.id AS category_id FROM notes LEFT JOIN category ON notes.category_id=category.id`;
     var sqlCount = `SELECT COUNT(*) AS totalCount FROM notes LEFT JOIN category ON notes.category_id=category.id`
     // searching by title
     if (!isEmpty(req.query.search)) {
@@ -39,11 +39,11 @@ exports.getNotesAll = (req, res) => {
     connection.query(sqlCount, function (error, rows, field) {
         if (error) {
             response.error(404, 'data not found', res)
-        } else{
-             totalCount = rows[0].totalCount;
-             totalPage =Math.ceil(totalCount/limit);
-            }
+        } else {
+            totalCount = rows[0].totalCount;
+            totalPage = Math.ceil(totalCount / limit);
         }
+    }
     )
     // query
 
@@ -55,10 +55,10 @@ exports.getNotesAll = (req, res) => {
                 response.error(404, 'data not found', res);
             } else {
                 res.json({
-                    totalData :totalCount,
-                    totalPage :totalPage,
-                    limit :limit,
-                    page : start,
+                    totalData: totalCount,
+                    totalPage: totalPage,
+                    limit: limit,
+                    page: start,
                     status: 200,
                     data: rows,
 
@@ -75,7 +75,7 @@ exports.getNotes = (req, res, next) => {
         response.error(200, 'error', res)
     } else {
         connection.query(
-            `SELECT notes.id AS id_notes,notes.title AS notes_title,notes.note AS notes_note,notes.time AS notes_time, category.name AS name_category, notes.category_id AS id_category,category.id AS id_category FROM notes LEFT JOIN category ON notes.category_id=category.id WHERE notes.id=?`,
+            `SELECT notes.id AS id_notes,notes.title AS notes_title,notes.note AS notes_note,notes.time AS notes_time, category.name AS name_category, notes.category_id AS category_id,category.id AS category_id FROM notes LEFT JOIN category ON notes.category_id=category.id WHERE notes.id=?`,
             [idNote],
             function (error, rows, field) {
                 if (error) {
@@ -98,41 +98,41 @@ exports.insert = (req, res) => {
     let title = req.body.title;
     let note = req.body.note;
     let id = req.body.category_id;
-    // console.log("this title"+title);
-    // console.log(note);
-    // console.log(id);
-    
-    // if (!(isEmpty(req.body.title)) || !(isEmpty(req.body.note)) || !(isEmpty(req.body.category_id))) {
-    //     // console.log("hhayaaa");
-        
-    //     res.send({
-    //         error: true,
-    //         message: 'data cannot body be empty'
-    //     })
-    // } else {
-        connection.query(
-            `INSERT INTO notes SET title=?,note=?,time=now(),category_id=?`,
-            [title, note, id],
-            function (error, rows, field) {
-                if (error) {
-                    // console.log(error)
-                    throw error;
-                } else { 
-                    let resultId = rows.insertId
-                    let data = {
-                        status :201,
-                        message : "data sucesfully",
-                        result : {
-                            id :resultId,
-                            title : title,
-                            note : note,
-                            category  :id,
+    connection.query(
+        `INSERT INTO notes SET title=?,note=?,time=now(),category_id=?`,
+        [title, note, id],
+        function (error, rows, field) {
+            if (error) {
+                // console.log(error)
+                throw error;
+            } else {
+                connection.query(
+                    `SELECT category.name FROM category WHERE category.id=?`,
+                    [id],
+                    function (error, rowscategory, field) {
+                        if (error) {
+                            throw error
+                        } else {
+                            let resultId = rows.insertId
+                            let categryName =rowscategory
+                            let data = {
+                                status: 201,
+                                message: "data sucesfully",
+                                result: {
+                                    id_notes: resultId,
+                                    notes_title: title,
+                                    notes_note: note,
+                                    category_id: id,
+                                    name_category: categryName[0].name
+                                }
+                            }
+                            return res.status(202).json(data).end();
                         }
                     }
-                    return res.status(202).json(data).end();
+                )
             }
         }
-        );
+    );
     // }
 }
 
@@ -143,40 +143,53 @@ exports.update = (req, res) => {
     let notes = req.body.note;
     // let time = moment().format('YYYY.MM.DD');
     let category = req.body.category_id;
+    connection.query(
+        `UPDATE notes SET title=?,note=?,time=now(),category_id=? WHERE id=?`,
+        [title, notes, category, idNotes],
+        function (error, rows, field) {
+            if (error) {
+                throw error;
+            } else {
+                connection.query(
+                    `SELECT category.name FROM category WHERE category.id=?`,
+                    [category],
+                    function (error, rows, field) {
+                        if (error) {
+                            throw error
+                        } else {
 
-        connection.query(
-            `UPDATE notes SET title=?,note=?,time=now(),category_id=? WHERE id=?`,
-            [title, notes, category, idNotes],
-            function (error, rows, field) {
-                if (error) {
-                    throw error;
-                } else {
-                    let data = {
-                        status :201,
-                        message : "data sucesfully",
-                        result : {
-                            id_notes :idNotes,
-                            notes_title : title,
-                            notes_note : notes,
-                            category_id  :category
+                            let categryName = rows;
+                            let data = {
+                                status: 201,
+                                message: "data sucesfully",
+                                result: {
+                                    id_notes: idNotes,
+                                    notes_title: title,
+                                    notes_note: notes,
+                                    category_id: category,
+                                    name_category: categryName[0].name
+                                }
+                            }
+                            return res.status(202).json(data).end();
                         }
                     }
-                    return res.status(202).json(data).end();
-                }
+
+                )
             }
-        );
-    }
+        }
+    );
+}
 
 // delete
 exports.delete = (req, res) => {
-    let idNotes = req.params.id;
+    let id_notes = req.params.id;
 
-    if (idNotes === 0 || idNotes === '') {
+    if (id_notes === 0 || id_notes === '') {
         response.error(200, 'error', res);
     } else {
         connection.query(
             `DELETE FROM notes WHERE id=?`,
-            [idNotes],
+            [id_notes],
             function (error, rows, field) {
                 if (error) {
                     throw error;
@@ -184,15 +197,15 @@ exports.delete = (req, res) => {
                     if (rows.affectedRows === 0 || rows.affectedRows === '') {
                         response.error(404, 'not found', res);
                     } else {
-                       let idresult = idNotes
-                       let data = {
-                           status : 202,
-                           message : 'succesfull',
-                           result : {
-                               idNotes : idresult
-                           }
-                       }
-                       return res.status(202).json(data).end()
+                        let idresult = id_notes
+                        let data = {
+                            status: 202,
+                            message: 'succesfull',
+                            result: {
+                                id_notes: parseInt(idresult)
+                            }
+                        }
+                        return res.status(202).json(data).end()
                     }
                 }
             }

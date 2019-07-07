@@ -21,6 +21,6 @@ module.exports = function (app) {
     app.get('/notes/category/:id', controllerNotes.getByCategory);
     app.get('/notes', controllerNotes.getNotesAll);
     app.post('/notes', controllerNotes.insert);
-    app.put('/notes/:id', controllerNotes.update);
+    app.patch('/notes/:id', controllerNotes.update);
     app.delete('/notes/:id', controllerNotes.delete);
 }

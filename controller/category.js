@@ -121,7 +121,15 @@ exports.delete = (req, res, next) => {
                     if (rows.affectedRows === 0 || rows.affectedRows === '') {
                         response.error(404, 'data not found', res);
                     } else {
-                        response.success(202, 'delete data succes', res, rows);
+                        let resultid =idCategory
+                        let data = {
+                            status :202,
+                            message :'data sucecesfull',
+                            result : {
+                                id : parseInt(resultid)
+                            }
+                        }
+                        return res.status(202).json(data).end()
                     }
                 }
             }
