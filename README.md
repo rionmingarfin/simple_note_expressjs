@@ -11,7 +11,7 @@
 ## GETTING STARTED
 
 This is application rest api made with expres.js,
-made this application aims to understand what it is CRUD DATA,cors,dan middleware
+made this application aims to understand what it is CRUD DATA,cors,middleware,unit testing
 
 ## software preparation needed
 * postman
@@ -47,7 +47,10 @@ PORT=3000
 
 ###### note
 
-note before adding the env first
+- note before adding the env first
+- for unit testing, please change the update and delete id based on the database.
+remember!
+Don't make ID mistakes
 
 ## endPoint LIST
 
@@ -62,11 +65,25 @@ note before adding the env first
 - `/category`
 - `/notes`
 
-###### 3.PUT & PATCH
-- `/category`
-- `/notes`
+###### 3.PATCH
+- `/category/:id`
+- `/notes/:id`
 
 
 ###### 4.DELETE
 - `/category/:id'` (delete by id)
 - `/notes/:id'` (delete by id)
+
+## REFRENSI
+- (https://www.chaijs.com/api/bdd/#method_a)
+- (https://medium.com/@asciidev/testing-a-node-express-application-with-mocha-chai-9592d41c0083)
+- (https://codeforgeek.com/unit-testing-nodejs-application-using-mocha/)
+- (https://codeburst.io/javascript-unit-testing-using-mocha-and-chai-1d97d9f18e71)
+
+## Screenshot from the app
+<p align='center'>
+  <span>
+  <img src='https://user-images.githubusercontent.com/43402837/62836071-c7321380-bc89-11e9-951f-b1d72a75533b.png' width=200 />
+
+  </span>
+</p>
