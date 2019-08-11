@@ -18,11 +18,7 @@ app.use(cors(configCors));
 //     res.header("Access-Control-Allow-Headers", "X-Requested-With, Content-Type,Accept,Authorization");
 //   
 
-app.use(
-    bodyParser.urlencoded({
-        extended: true,
-    })
-);
+app.use(bodyParser.urlencoded({ extended: true, }));
 // use bodyParser
 app.use(bodyParser.json());
 // run to routers
@@ -31,3 +27,5 @@ routes(app);
 // call port and run it from config.js
 app.listen(env.PORT);
 console.log(`hello word ${env.PORT}`);
+
+export default app 

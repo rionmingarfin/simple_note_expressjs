@@ -80,10 +80,10 @@ exports.insert = (req, res) => {
 }
 
 exports.update = (req, res) => {
-    let idCategory = req.body.id;
+    let idCategory = req.params.id;
     let name = req.body.name;
 
-    if (isEmpty(req.body.id) || isEmpty(req.body.name)) {
+    if (isEmpty(req.body.name)) {
         response.error(403, 'data cannot body be empty', res);
     } else {
         connection.query(
