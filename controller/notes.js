@@ -163,7 +163,7 @@ exports.update = (req, res) => {
                                 status: 201,
                                 message: "data sucesfully",
                                 result: {
-                                    id_notes: idNotes,
+                                    id_notes: parseInt(idNotes),
                                     notes_title: title,
                                     notes_note: notes,
                                     category_id: category,

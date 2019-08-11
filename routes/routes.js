@@ -12,7 +12,7 @@ module.exports = function (app) {
     app.get('/category', controller.getAllCategory);
     app.get('/category/:id', controller.getCategory);
     app.post('/category', controller.insert);
-    app.put('/category', controller.update);
+    app.put('/category/:id', controller.update);
     app.delete('/category/:id', controller.delete);
 
     // route notes
